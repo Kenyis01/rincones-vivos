@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/*
+  Tokens de diseño del proyecto.
+  Reemplazar estos valores de ejemplo con los de docs/design-tokens.md.
+  Cada token genera utilidades de Tailwind (bg-brand, text-ink, font-display, etc.)
+  y queda disponible como variable CSS en runtime.
+*/
+@theme {
+  /* Colores (nombrados por rol, no por apariencia) */
+  --color-brand: #1a3c34;
+  --color-brand-dark: #0f241f;
+  --color-accent: #c2703d;
+  --color-bg: #f5f1e8;
+  --color-surface: #ffffff;
+  --color-ink: #1c1c1a;
+  --color-ink-muted: #5c5c57;
+  --color-border: #e0dccf;
+
+  /* Tipografía (reemplazar por las fuentes del cliente) */
+  --font-display: "Georgia", serif;
+  --font-body: system-ui, sans-serif;
+
+  /* Espaciado custom */
+  --spacing-section: 6rem;
+}
+
+/* Estilos base mínimos. Mantener al mínimo; el resto va con utilidades. */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

@@ -1,0 +1,28 @@
+# dependencias
+node_modules/
+
+# build / salida
+dist/
+.astro/
+
+# variables de entorno (nunca subir secretos)
+.env
+.env.production
+.env.local
+
+# logs
+*.log
+npm-debug.log*
+
+# sistema operativo
+.DS_Store
+Thumbs.db
+
+# editores
+.vscode/*
+!.vscode/extensions.json
+
+# deploy
+.wrangler/
+.vercel/
+.netlify/

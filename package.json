@@ -1,0 +1,25 @@
+{
+  "name": "astro-template",
+  "version": "1.0.0",
+  "description": "Base reutilizable para construir sitios de clientes con Astro, optimizados para velocidad, SEO y accesibilidad. Pensada para trabajar con Claude Code dentro de Cursor.",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@tailwindcss/postcss": "^4.3.0",
+    "astro": "^6.4.4",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.0"
+  },
+  "type": "module"
+}
