@@ -58,3 +58,13 @@
 
 ## Notas y restricciones
 - (Plazos, cosas que el cliente pidió explícitamente, cosas a evitar, etc.)
+
+## IDs de herramientas (completar cuando estén dados de alta)
+> Copiar estos valores también al `.env.local` del proyecto.
+
+- **Dominio final:** (ej. estudiojuridico.com.ar)
+- **GA4 — ID de medición:** (ej. G-XXXXXXXXXX)
+- **Microsoft Clarity — ID de proyecto:** (ej. abc1de2fgh)
+- **Google Search Console — código de verificación:** (el valor del `content` del meta tag)
+- **Google Business Profile — URL del perfil:** (ej. https://maps.app.goo.gl/...)
+- **Bing Webmaster Tools:** (verificado ✓ / pendiente)

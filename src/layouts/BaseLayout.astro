@@ -17,6 +17,10 @@ const { title, description, image = "/og-default.jpg", noindex = false } = Astro
 // URL canónica y absolutas para SEO (dependen de `site` en astro.config.mjs).
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const socialImageURL = new URL(image, Astro.site);
+
+// IDs de analítica — se leen del .env.local (nunca hardcodear aquí).
+const GA4_ID = import.meta.env.PUBLIC_GA4_ID;
+const CLARITY_ID = import.meta.env.PUBLIC_CLARITY_ID;
 ---
 
 <!doctype html>
@@ -39,11 +43,35 @@ const socialImageURL = new URL(image, Astro.site);
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImageURL} />
 
-    <!-- Twitter -->
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImageURL} />
+
+    <!-- Google Analytics 4 (se activa solo si PUBLIC_GA4_ID está en .env.local) -->
+    {GA4_ID && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}></script>
+        <script is:inline define:vars={{ GA4_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', GA4_ID);
+        </script>
+      </>
+    )}
+
+    <!-- Microsoft Clarity (se activa solo si PUBLIC_CLARITY_ID está en .env.local) -->
+    {CLARITY_ID && (
+      <script is:inline define:vars={{ CLARITY_ID }}>
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", CLARITY_ID);
+      </script>
+    )}
   </head>
   <body class="min-h-screen bg-bg font-body text-ink antialiased">
     <a
