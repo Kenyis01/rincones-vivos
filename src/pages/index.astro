@@ -1,22 +1,184 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import ComingSoonLayout from "../layouts/ComingSoonLayout.astro";
 ---
 
-<BaseLayout
-  title="Plantilla Astro — Base lista"
-  description="Punto de partida para sitios de clientes. Reemplazar con el contenido y diseño reales."
+<ComingSoonLayout
+  title="Rincones Vivos — Próximamente"
+  description="Lucía Dirisio, técnica en jardinería UBA. Diseño y mantenimiento de espacios verdes urbanos, paisajes en macetas y jardinería orgánica."
 >
-  <section class="mx-auto max-w-3xl px-4 py-section">
-    <h1 class="font-display text-4xl text-brand">La base está funcionando</h1>
-    <p class="mt-4 text-lg text-ink-muted">
-      Si estás viendo esto, Astro, Tailwind y la estructura del proyecto están
-      configurados correctamente. Reemplazá esta página con el diseño del cliente.
-    </p>
-    <p class="mt-8 text-sm text-ink-muted">
-      Próximos pasos: completar <code>docs/client-brief.md</code> y
-      <code>docs/design-tokens.md</code>, trasladar los tokens al bloque
-      <code>@theme</code> en <code>src/styles/global.css</code>, y empezar a
-      construir las páginas.
-    </p>
-  </section>
-</BaseLayout>
+  <main class="min-h-screen flex items-center justify-center bg-bg">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; position:relative; z-index:1;">
+      <p style="color:#1a3c34; font-family:'DM Sans',system-ui,sans-serif; font-weight:700; font-size:24px; line-height:1.5; margin:0;">
+        Espacio verde en construcción!
+      </p>
+      <p style="color:#1a3c34; font-family:'DM Sans',system-ui,sans-serif; font-weight:500; font-size:12px; line-height:1.5; margin:0;">
+        Mientras tanto podés seguirme en <a
+          href="https://www.instagram.com/rinconesvivos/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="color:#1a3c34; text-decoration:underline; text-underline-offset:2px;"
+        >@rinconesvivos</a>
+      </p>
+    </div>
+
+    <div id="leaf-canvas" aria-hidden="true"></div>
+  </main>
+</ComingSoonLayout>
+
+<!-- is:global: dynamically created .rv-leaf elements don't receive Astro's scoped hash -->
+<style is:global>
+  #leaf-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  /* Split into two independent animations to avoid ease-in-out stutter at keyframe boundaries */
+  @keyframes leafDrop {
+    from { transform: translate(0, 0) rotate(var(--rot)) scale(var(--s)); }
+    to   { transform: translate(var(--sw), var(--d)) rotate(calc(var(--rot) + var(--sp))) scale(calc(var(--s) * 0.88)); }
+  }
+
+  @keyframes leafFade {
+    0%   { opacity: 0; }
+    10%  { opacity: 0.72; }
+    68%  { opacity: 0.55; }
+    100% { opacity: 0; }
+  }
+
+  .rv-leaf {
+    position: absolute;
+    pointer-events: none;
+    transform-origin: 50% 35%;
+    animation:
+      leafDrop var(--dur) cubic-bezier(0.4, 0, 0.6, 1) forwards,
+      leafFade var(--dur) linear forwards;
+  }
+</style>
+
+<script>
+  const canvas = document.getElementById("leaf-canvas");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (!prefersReducedMotion && canvas) {
+    // 5 genuinely asymmetric shapes — one side curves more than the other
+    const SHAPES = [
+      // Right side bulges more — common oval but off-center
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 28" fill="none">
+        <path d="M9 0 C17 2 21 11 18 20 C16 26 11 28 9 28 C7 28 2 25 1 19 C-1 10 3 2 9 0Z" fill="F"/>
+        <path d="M9 1 C10 9 9 19 8 26" stroke="V" stroke-width="0.7" stroke-linecap="round" fill="none"/>
+        <path d="M9 8 C13 10 16 11 18 11" stroke="V" stroke-width="0.35" stroke-linecap="round" fill="none"/>
+        <path d="M9 15 C6 17 3 17 1 17" stroke="V" stroke-width="0.35" stroke-linecap="round" fill="none"/>
+      </svg>`,
+      // Tip pulled left — like a wind-bent blade
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 32" fill="none">
+        <path d="M5 0 C12 3 15 12 13 22 C11 28 8 31 6 31 C4 30 1 26 1 19 C0 11 1 3 5 0Z" fill="F"/>
+        <path d="M5 1 C7 12 6 22 5 29" stroke="V" stroke-width="0.6" stroke-linecap="round" fill="none"/>
+      </svg>`,
+      // One side nearly straight, other very curved
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 26" fill="none">
+        <path d="M8 0 C16 3 18 11 16 19 C14 24 10 26 8 26 C7 26 3 23 3 18 C3 11 4 3 8 0Z" fill="F"/>
+        <path d="M8 1 C8.5 9 8 18 8 24" stroke="V" stroke-width="0.65" stroke-linecap="round" fill="none"/>
+        <path d="M8 7 C11 9 14 10 16 10" stroke="V" stroke-width="0.3" stroke-linecap="round" fill="none"/>
+        <path d="M8 14 C5 16 3 16 3 16" stroke="V" stroke-width="0.3" stroke-linecap="round" fill="none"/>
+      </svg>`,
+      // Wide, short, asymmetric — more like a pothos leaf
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26 22" fill="none">
+        <path d="M13 0 C22 1 27 8 25 16 C23 20 18 22 13 22 C9 22 3 19 1 14 C-1 8 4 1 13 0Z" fill="F"/>
+        <path d="M13 1 C13 8 13 15 13 21" stroke="V" stroke-width="0.75" stroke-linecap="round" fill="none"/>
+        <path d="M13 6 C17 8 21 9 24 9" stroke="V" stroke-width="0.35" stroke-linecap="round" fill="none"/>
+        <path d="M13 6 C9 8 5 9 2 9" stroke="V" stroke-width="0.35" stroke-linecap="round" fill="none"/>
+        <path d="M13 13 C16 14 19 14 21 14" stroke="V" stroke-width="0.3" stroke-linecap="round" fill="none"/>
+        <path d="M13 13 C10 14 7 14 5 14" stroke="V" stroke-width="0.3" stroke-linecap="round" fill="none"/>
+      </svg>`,
+      // Narrow, very asymmetric — tip offset from base
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 30" fill="none">
+        <path d="M4 0 C11 2 14 11 12 21 C10 27 7 30 5 29 C3 28 0 24 0 17 C-1 9 0 2 4 0Z" fill="F"/>
+        <path d="M4 1 C6 11 5 21 4 27" stroke="V" stroke-width="0.55" stroke-linecap="round" fill="none"/>
+      </svg>`,
+    ];
+
+    const FILLS = ["#1a3c34", "#2d6a4f", "#354f52", "#1b4332", "#3d6b57"];
+    const VEINS  = ["#a8c5bc", "#74b49b", "#8fbc8f", "#b2d0c7"];
+
+    let lastX = 0;
+    let lastY = 0;
+    let lastSpawn = 0;
+
+    function rand(min: number, max: number): number {
+      return min + Math.random() * (max - min);
+    }
+
+    function spawnLeaf(x: number, y: number): void {
+      const el = document.createElement("div");
+      el.className = "rv-leaf";
+
+      const shapeIdx = Math.floor(Math.random() * SHAPES.length);
+      const fill = FILLS[Math.floor(Math.random() * FILLS.length)];
+      const vein = VEINS[Math.floor(Math.random() * VEINS.length)];
+      const svg = SHAPES[shapeIdx].replaceAll("F", fill).replaceAll("V", vein);
+
+      const scale = rand(0.6, 1.15);
+      const rot   = rand(-65, 65);
+      const sway  = rand(-35, 35);
+      const dist  = rand(70, 120);
+      const spin  = rand(70, 190) * (Math.random() > 0.5 ? 1 : -1);
+      const dur   = rand(1.5, 2.4);
+      const ox    = rand(-8, 8);
+      const oy    = rand(-8, 8);
+
+      el.innerHTML = svg;
+      el.style.cssText = [
+        `left:${x + ox}px`,
+        `top:${y + oy}px`,
+        `--rot:${rot}deg`,
+        `--sw:${sway}px`,
+        `--d:${dist}px`,
+        `--sp:${spin}deg`,
+        `--s:${scale}`,
+        `--dur:${dur}s`,
+        `width:${Math.round(scale * 11)}px`,
+      ].join(";");
+
+      canvas.appendChild(el);
+      el.addEventListener("animationend", () => el.remove(), { once: true });
+    }
+
+    function handleMove(x: number, y: number): void {
+      const now = performance.now();
+      if (now - lastSpawn < 25) return;
+      lastSpawn = now;
+
+      const dx = x - lastX;
+      const dy = y - lastY;
+      const speed = Math.sqrt(dx * dx + dy * dy);
+      lastX = x;
+      lastY = y;
+
+      const count = speed > 65 ? 2 : speed > 28 ? 1 : 0;
+      for (let i = 0; i < count; i++) {
+        spawnLeaf(x, y);
+      }
+    }
+
+    window.addEventListener("mousemove", (e: MouseEvent) => {
+      handleMove(e.clientX, e.clientY);
+    });
+
+    // Touch: drag to trail, tap to burst a couple of leaves
+    window.addEventListener("touchmove", (e: TouchEvent) => {
+      const t = e.touches[0];
+      handleMove(t.clientX, t.clientY);
+    }, { passive: true });
+
+    window.addEventListener("touchstart", (e: TouchEvent) => {
+      const t = e.touches[0];
+      lastX = t.clientX;
+      lastY = t.clientY;
+      spawnLeaf(t.clientX, t.clientY);
+      spawnLeaf(t.clientX, t.clientY);
+    }, { passive: true });
+  }
+</script>
